@@ -1,6 +1,23 @@
 <template>
   <q-page class="bg-grey-3 column" >
-    <q-list class="bg-white" separator bordered>
+    <div class="row q-pa-sm bg-primary">
+
+      <q-input v-model="newTask"
+      class="col"
+      square
+      filled bg-color="white"
+        placeholder="Add task"
+       :dense="dense">
+
+
+        <template v-slot:append>
+          <q-btn round dense flat icon="add" />
+        </template>
+      </q-input>
+    </div>
+    <q-list
+
+    class="bg-white" separator bordered>
       <q-item v-for="(task,index) in tasks" :key="task.title"
        @click="task.done=!task.done"
         clickable
@@ -18,6 +35,7 @@
         <q-item-section
         v-if="task.done" side>
         <q-btn
+        @click.stop="deleteTask"
         flat
         round
         dense
@@ -36,6 +54,7 @@
 export default({
 data(){
   return{
+newTask:'',
     tasks:[
     {
       title:'Get up',
@@ -50,6 +69,23 @@ data(){
       done:false
     }
   ]
+  }
+
+},
+methods:{
+  deleteTask(index){
+    this.$q.dialog({
+        title: 'Confirm',
+        message: 'Are you sure you want to delete?',
+        cancel: true,
+        persistent: true
+      }).onOk(() => {
+         this.tasks.splice(index,1)
+         this.$q.notify('Task deleted')
+      })
+  },
+  addTask(){
+    console.log(Addtask)
   }
 }
 })
