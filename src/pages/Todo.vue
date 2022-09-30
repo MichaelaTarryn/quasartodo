@@ -3,15 +3,16 @@
     <div class="row q-pa-sm bg-primary">
 
       <q-input v-model="newTask"
+      @keyup.enter="addTask"
       class="col"
       square
       filled bg-color="white"
         placeholder="Add task"
-       :dense="dense">
-
-
+       dense>
         <template v-slot:append>
-          <q-btn round dense flat icon="add" />
+          <q-btn
+          @click="addTask"
+          round dense flat icon="add" />
         </template>
       </q-input>
     </div>
@@ -20,8 +21,8 @@
     class="bg-white" separator bordered>
       <q-item v-for="(task,index) in tasks" :key="task.title"
        @click="task.done=!task.done"
-        clickable
         :class="{'done bg-blue-done':task.done}"
+        clickable
         v-ripple>
         <q-item-section avatar>
           <q-checkbox
@@ -35,7 +36,7 @@
         <q-item-section
         v-if="task.done" side>
         <q-btn
-        @click.stop="deleteTask"
+        @click.stop="deleteTask(index)"
         flat
         round
         dense
@@ -45,6 +46,21 @@
       </q-item>
 
     </q-list>
+    <div
+    v-if="!tasks.length"
+     class="no-tasks absolute-center">
+      <q-icon
+
+      name="check"
+      size="100px"
+      color="primary"
+      >
+
+      </q-icon>
+      <div class="text-h5 text-primary text-center">
+NO TASKS
+      </div>
+    </div>
   </q-page>
 </template>
 
@@ -56,18 +72,18 @@ data(){
   return{
 newTask:'',
     tasks:[
-    {
-      title:'Get up',
-      done:false
-    },
-    {
-      title:'check phone',
-      done:false
-    },
-    {
-      title:'call meagan',
-      done:false
-    }
+    // {
+    //   title:'Get up',
+    //   done:false
+    // },
+    // {
+    //   title:'check phone',
+    //   done:false
+    // },
+    // {
+    //   title:'call meagan',
+    //   done:false
+    // }
   ]
   }
 
@@ -85,14 +101,24 @@ methods:{
       })
   },
   addTask(){
-    console.log(Addtask)
+    this.tasks.push({
+      title:this.newTask,
+      done:false,
+    })
+    this.newTask=''
   }
 }
 })
 </script>
 <style lang="scss">
-.q-item__label{
+  .done{
+    .q-item__label{
   text-decoration: line-through;
   color:#bbb
+}
+  }
+
+.no-tasks{
+  opacity: 0.5;
 }
 </style>
